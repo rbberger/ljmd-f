@@ -1,3 +1,7 @@
+#from sys import argv
+
+#script, filename = argv
+
 class ParticleData(object):
 	def __init__(self,filename,natoms):
 		self._natoms = natoms
@@ -18,9 +22,15 @@ class ParticleData(object):
 			self._vel.append(tuple(temp2))
 		f.close()
 
+	def write_out(self,filename):
+		f = open(filename,'w')
+		for p in self._position:
+			f.write("%f\t%f\t%f\n" % p)
+		for v in self._vel:
+			f.write("%f\t%f\t%f\n" % v)
+		f.close()
+		
+
 if __name__ == "__main__":
 	pd = ParticleData("../examples/argon_108.rest", 108)
-	print pd._vel[107]
-	#pos = [float(self._position) for i in self._position]
-	#vel = [float(self._vel) for i in self._vel]
-	print 'Last pos is: ', pd._position[107]
+	pd.write_out("output.rest")
