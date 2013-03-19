@@ -101,4 +101,42 @@ SUBROUTINE initMdCell
 
 !  DEALLOCATE(pos,vel,frc)
 !END PROGRAM LJMD
+
+SUBROUTINE set_parameters(natomsG, timesstepG, numstepsG, outputfreqG,massG, epsilonG, sigmaG, rcutG, boxG)
+
+INTEGER, intent(in) :: natomsG, timesstepG, numstepsG, outputfreqG
+REAL, intent(in) :: massG, epsilonG, sigmaG, rcutG, boxG
+
+
+natoms = natomsG
+dt = timesstepG
+nsteps = numstepsG
+nfi = outputfreqG
+mass = massG
+epsilon = epsilonG
+sigma = sigmaG
+rcut = rcutG
+box = boxG
+
+ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
+
+END SUBROUTINE set_parameters
+
+SUBROUTINE set_positions_velocities(id,x,y,z,vx,vy,vz) 
+INTEGER, INTENT(IN) :: id
+REAL, INTENT(in) :: x, y, z, vx, vy, vz
+
+pos(id,1) = x
+pos(id,2) = y
+pos(id,3) = z
+vel(id,1) = vx
+vel(id,2) = vy
+vel(id,3) = vz
+
+END SUBROUTINE set_positions_velocities
+
+
+
+
+
 END MODULE LJMD
