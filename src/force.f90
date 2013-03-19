@@ -1,7 +1,6 @@
  
 ! compute forces 
 SUBROUTINE force
-  USE kinds
   USE utils
   USE mdsys
   USE cell

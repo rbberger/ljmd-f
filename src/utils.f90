@@ -1,6 +1,6 @@
  
 MODULE utils
-  USE kinds
+  USE mdsys
   IMPLICIT NONE
 
   PRIVATE

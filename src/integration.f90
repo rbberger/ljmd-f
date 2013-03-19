@@ -1,7 +1,6 @@
  
 ! velocity verlet
 SUBROUTINE velverlet
-  USE kinds
   USE mdsys
   USE physconst
   IMPLICIT NONE

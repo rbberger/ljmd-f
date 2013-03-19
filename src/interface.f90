@@ -1,32 +1,12 @@
- 
-MODULE iointerface
-  IMPLICIT NONE
-  
+SUBROUTINE parameters
+INTEGER :: natoms, timestep, numsteps, outputfreq
+REAL :: mass, epsilon, sigma, rcut, box
+character(len=1024) :: restartFilename, trajectoryFilename, energiesFilename
+END SUBROUTINE parameters
 
-CONTAINS
-  SUBROUTINE inputData !box,eps,
-  implicit none
-  
-  END SUBROUTINE inputData
-  
-  SUBROUTINE potential(potType,a,b,c)	!Potential parameters
-  END SUBROUTINE potential
-  
-  SUBROUTINE inputMass
-  implicit none
-  
-  END SUBROUTINE inputMass
-  
-  SUBROUTINE initialPosition
-    integer :: i,id,nAtoms
-    
-    write(*,*) 'input N of types'
-    READ(*,*) id
-!  do i=1,id
-!    allocate(pos(i,nAtoms,3))
-!    allocate(vel(i,nAtoms,3))
-!    write(*,*) 'Initial Position'
-  END SUBROUTINE initialPosition
-  
-  
-END MODULE iointerface
+SUBROUTINE Initial_pos_vel
+real,  allocatable :: pos(:,:), vel(:,:) 
+
+ ALLOCATE(pos(natoms,3), vel(natoms,3))
+END SUBROUTINE Initial_pos_vel
+
