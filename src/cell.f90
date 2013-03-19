@@ -1,6 +1,6 @@
  
 MODULE cell
-  USE kinds
+  USE mdsys
   IMPLICIT NONE
   INTEGER :: npair, ncell, ngrid, nidx
   INTEGER, POINTER :: npercell(:), clist(:,:), plist(:)
@@ -14,7 +14,7 @@ MODULE cell
 CONTAINS
 
   SUBROUTINE mkcell
-    USE io
+    !USE io
     USE mdsys
     USE utils
     REAL(kind=dbl) :: boxby2, boxoffs, x1, y1, z1, x2, y2, z2, rx, ry, rz
@@ -70,14 +70,14 @@ CONTAINS
        END DO
     END DO
 
-    WRITE(stdout,'(A,I2,"x",I2,"x",I2,"=",I6,A,I8,"/",I12,A,I4,A)') 'Cell list has ', &
-         ngrid, ngrid, ngrid, ncell, ' cells with ', npair, ncell*(ncell-1)/2, &
-         ' pairs and ', nidx, ' atoms/celllist'
+    !WRITE(stdout,'(A,I2,"x",I2,"x",I2,"=",I6,A,I8,"/",I12,A,I4,A)') 'Cell list has ', &
+        !ngrid, ngrid, ngrid, ncell, ' cells with ', npair, ncell*(ncell-1)/2, &
+        !' pairs and ', nidx, ' atoms/celllist'
   END SUBROUTINE mkcell
 
   ! update cell list contents
   SUBROUTINE updcell
-    USE io
+    !USE io
     USE mdsys
     USE utils
 
@@ -102,8 +102,8 @@ CONTAINS
        IF (idx > midx) midx=idx
     END DO
     IF (midx > nidx) THEN
-       WRITE(stdout, '(A,I8,"/",I8,A)') 'Overflow in cell list: ', midx, nidx, ' atoms/cell.'
-       STOP 'Fatal error'
+       !WRITE(stdout, '(A,I8,"/",I8,A)') 'Overflow in cell list: ', midx, nidx, ' atoms/cell.'
+       !STOP 'Fatal error'
     END IF
   END SUBROUTINE updcell
 
