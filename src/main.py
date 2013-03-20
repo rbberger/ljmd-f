@@ -1,11 +1,15 @@
+from sys import argv
+
+script, input_file, particle_file = argv
+
 import input 
 import particle_load as Pdata
 import output
 from fintegration import ljmd as fi
 if __name__ == "__main__":
     p = input.Parameters()			# To load the Parameters
-    p.load_from_file("../examples/argon_108.inp")  # To load initial pos and vel
-    pd = Pdata.ParticleData("../examples/argon_108.rest", 108) 	
+    p.load_from_file(input_file)  # To load initial pos and vel
+    pd = Pdata.ParticleData(particle_file, pd.natoms) 	
     out = output.Output(p)
     
     xyzfile = open("position.dat", "w")
