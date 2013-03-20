@@ -10,8 +10,8 @@
   USE utils
   USE mdsys
   USE cell
-  USE physconst
- IMPLICIT NONE
+  USE physconst 
+IMPLICIT NONE
   
 !  INTEGER :: nprint, i, j
 !  INTEGER, EXTERNAL :: omp_get_num_threads
@@ -120,6 +120,9 @@ rcut = rcutG
 box = boxG
 
 ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
+WRITE(*,*) 'natoms=',natoms,'timestep=', dt,'nstep=', nsteps
+WRITE(*,*) 'otputfreq=', nfi,'mass=',mass,'eps=', epsilon
+WRITE(*,*) 'sIGMA=',sigma,'rcut=', rcut,'box=', box
 
 END SUBROUTINE set_parameters
 
@@ -134,10 +137,12 @@ vel(id,1) = vx
 vel(id,2) = vy
 vel(id,3) = vz
 
+WRITE(*,*) pos(id,1)
 END SUBROUTINE set_positions_velocities
 
 
-
-
+SUBROUTINE tesdt
+ CALL lala 
+END SUBROUTINE tesdt
 
 END MODULE LJMD

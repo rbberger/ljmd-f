@@ -34,7 +34,7 @@ class Parameters:
 
         # number of atoms
         line = f.readline()
-        self.natoms = get_float_parameter(line)[0]
+        self.natoms = int(get_float_parameter(line)[0])
         # mass in AMU
         line = f.readline()
         self.mass = get_float_parameter(line)[0]
