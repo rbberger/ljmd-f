@@ -144,9 +144,21 @@ vel(id,1) = vx
 vel(id,2) = vy
 vel(id,3) = vz
 
-!WRITE(*,*) pos(id,1)
 END SUBROUTINE set_positions_velocities
 
+FUNCTION get_position(id, coord)
+INTEGER, INTENT(IN) :: id
+INTEGER, INTENT(IN) :: coord
+REAL(8) :: get_position 
+    get_position = pos(id, coord)
+END FUNCTION
+
+FUNCTION get_velocity(id,coord)
+INTEGER, INTENT(IN) :: id
+INTEGER, INTENT(IN) :: coord
+REAL (8) :: get_velocity
+    get_velocity = vel(id,coord)
+END FUNCTION
 
 !SUBROUTINE tesdt
 ! CALL lala 
