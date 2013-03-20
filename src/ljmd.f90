@@ -10,7 +10,8 @@
   USE utils
   USE mdsys
   USE cell
-  IMPLICIT NONE
+  USE physconst
+ IMPLICIT NONE
   
 !  INTEGER :: nprint, i, j
 !  INTEGER, EXTERNAL :: omp_get_num_threads
