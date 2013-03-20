@@ -7,6 +7,9 @@ if __name__ == "__main__":
     p.load_from_file("../examples/argon_108.inp")  # To load initial pos and vel
     pd = Pdata.ParticleData("../examples/argon_108.rest", 108) 	
     out = output.Output(p)
+    
+    xyzfile = open("position.dat", "w")
+    velfile = open("velocity.dat", "w")
 
     out.write_header()
     print "\nParameters:"
@@ -25,20 +28,20 @@ if __name__ == "__main__":
     pd.write_out("output.rest")
         
     #interface.updcell()
-    #interface
-    
-    #temp = 2.3
-    #ekin = 4.6
-    #epot = 5.7
-    #pos = [(1.0, 2.0, 3.0), (4.0, 5.0, 6.0)]
 
     fi.set_parameters(p.natoms, p.timestep, p.numsteps, p.outputfreq, p.mass, p.epsilon, p.sigma, p.rcut, p.box)    
-    #algo = fi.set_parameters(2, 2, 3, 4,1.0, 4.5, 3.0, 1.0, 3.0)   
-    
 
     for i in range(p.natoms):
         fi.set_positions_velocities(i+1, pd._position[i][0], pd._position[i][1], pd._position[i][2], pd._vel[i][0], pd._vel[i][1], pd._vel[i][2]) 
 
+
+    for j in range(p.natoms):
+        xyzfile.write( "%f\t%f\t%f\n" % (fi.get_position(j+1,1),fi.get_position(j+1,2),fi.get_position(j+1,3)))
+        velfile.write( "%f\t%f\t%f\n" % (fi.get_velocity(j+1,1),fi.get_velocity(j+1,2),fi.get_velocity(j+1,3)))
+    xyzfile.close()
+    velfile.close()
+    
+ 
     print '\nStarting simulation ...'
     for n in range(int(p.numsteps)):		
         if n % p.outputfreq == 0 :
@@ -49,8 +52,5 @@ if __name__ == "__main__":
         #interface.updcell()
         #interface
     #out.close()
-    
-    #fi.physconst.lala()
-    fi.tesdt()
     
     print 'End simulation. Bye Bye'
