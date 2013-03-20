@@ -42,19 +42,21 @@ if __name__ == "__main__":
         velfile.write( "%f\t%f\t%f\n" % (fi.get_velocity(j+1,1),fi.get_velocity(j+1,2),fi.get_velocity(j+1,3)))
     xyzfile.close()
     velfile.close()
-
- 
+    
+    pos = []
+    for j in range(p.natoms):
+        pos.append( (fi.get_position(j+1,1), fi.get_position(j+1,2), fi.get_position(j+1,3)) )
+        
+   # print pos
+   # print len(pos)
     print '\nStarting simulation ...'
     for n in range(int(p.numsteps)):	
         fi.onestep()
-         #  if n % p.outputfreq == 0 :
-	  #	pass
-          #  out.output(n,temp,ekin,epot,pos)
-            #print n	
-
+        if n % p.outputfreq == 0 :
+            out.output(n,temp,ekin,epot,pos)
     out.close()
     
-    #   pd.write_out("output.rest")
+   # pd.output.close() 
     fi.closemd()    
     fi.endsimulation()
     print 'End simulation. Bye Bye'
