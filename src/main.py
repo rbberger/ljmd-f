@@ -39,18 +39,19 @@ if __name__ == "__main__":
     for i in range(p.natoms):
         fi.set_positions_velocities(i+1, pd._position[i][0], pd._position[i][1], pd._position[i][2], pd._vel[i][0], pd._vel[i][1], pd._vel[i][2]) 
 
+    fi.initmdcell()    
+    fi.initforceenergy()
     print '\nStarting simulation ...'
-    for n in range(int(p.numsteps)):		
-        if n % p.outputfreq == 0 :
-            pass
-            #out.output(n,temp,ekin,epot,pos)
-            #print n
+    for n in range(int(p.numsteps)):	
+        fi.onestep()
+         #  if n % p.outputfreq == 0 :
+	  #	pass
+          #  out.output(n,temp,ekin,epot,pos)
+            #print n	
 
-        #interface.updcell()
-        #interface
-    #out.close()
+    out.close()
     
-    #fi.physconst.lala()
-    fi.tesdt()
-    
+    #   pd.write_out("output.rest")
+    fi.closemd()    
+    fi.endsimulation()
     print 'End simulation. Bye Bye'

@@ -26,7 +26,6 @@ SUBROUTINE force
   rcutsq=rcut*rcut
   c12 = 4.0_dbl*epsilon*sigma**12
   c6  = 4.0_dbl*epsilon*sigma**6
-
   ! first compute per cell self-interactions
   DO kk=0, ncell-1, nthreads
      i = kk + tid
@@ -56,7 +55,6 @@ SUBROUTINE force
         END DO
      END DO
   END DO
-
   ! now compute per cell-cell interactions from pair list
   DO kk=0, npair-1, nthreads
      n = kk + tid

@@ -1,6 +1,5 @@
 # -*- Makefile -*-
 SHELL=/bin/sh
-
 # user configuration
 
 FC=gfortran

@@ -20,6 +20,7 @@ CONTAINS
     REAL(kind=dbl) :: boxby2, boxoffs, x1, y1, z1, x2, y2, z2, rx, ry, rz
     INTEGER :: i, j, k
     
+!    PRINT*,'I AM HERE'
         
     ngrid   = FLOOR(cellrat * box / rcut)
     ncell   = ngrid * ngrid * ngrid
@@ -28,7 +29,8 @@ CONTAINS
     boxoffs = boxby2 - 0.5_dbl*dcell
     nidx = 2*natoms / ncell + 2
     nidx = ((nidx/2) + 1) * 2
-        
+    
+    
     ! allocate cell list storage 
     ALLOCATE(npercell(ncell), clist(ncell,nidx), plist(2*ncell*ncell))
 

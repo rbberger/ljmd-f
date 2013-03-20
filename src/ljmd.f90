@@ -17,7 +17,7 @@ IMPLICIT NONE
 !  INTEGER, EXTERNAL :: omp_get_num_threads
 !  CHARACTER(len=sln) :: restfile, trajfile, ergfile
 
-!  nthreads = 1
+!   nthreads = 1
   !$OMP parallel shared(nthreads)
   !$OMP master
   !$  nthreads = omp_get_num_threads()
@@ -54,18 +54,20 @@ IMPLICIT NONE
   
 CONTAINS
 
-SUBROUTINE initMdCell
-  ! set up cell list
+  SUBROUTINE initMdCell
+ ! set up cell list
+    Print*,'I am in the init MdCell'
     CALL mkcell
     CALL updcell
   END SUBROUTINE initMdCell
   
   SUBROUTINE initForceEnergy
   ! initialize forces and energies
+    Print*,'I am in the init Force Energy'
   nfi=0
   frc(:,:,:) = 0.0_dbl
   CALL force
-  CALL getekin
+!  CALL getekin
   END SUBROUTINE initForceEnergy  
   
   
@@ -85,11 +87,11 @@ SUBROUTINE initMdCell
   !   END IF
 
 ! propagate system and recompute energies
- SUBROUTINE mainLoop
+ SUBROUTINE onestep
      CALL updcell
      CALL velverlet
      CALL getekin
- END SUBROUTINE mainLoop
+ END SUBROUTINE onestep
  ! END DO
 
   ! clean up: close files, free memory
@@ -104,7 +106,6 @@ SUBROUTINE initMdCell
 !END PROGRAM LJMD
 
 SUBROUTINE set_parameters(natomsG, timesstepG, numstepsG, outputfreqG,massG, epsilonG, sigmaG, rcutG, boxG)
-
 INTEGER, intent(in) :: natomsG, timesstepG, numstepsG, outputfreqG
 REAL, intent(in) :: massG, epsilonG, sigmaG, rcutG, boxG
 
@@ -118,13 +119,19 @@ epsilon = epsilonG
 sigma = sigmaG
 rcut = rcutG
 box = boxG
+nthreads = 1
 
-ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
-WRITE(*,*) 'natoms=',natoms,'timestep=', dt,'nstep=', nsteps
-WRITE(*,*) 'otputfreq=', nfi,'mass=',mass,'eps=', epsilon
-WRITE(*,*) 'sIGMA=',sigma,'rcut=', rcut,'box=', box
+ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads)) ! warning nthreads
+!WRITE(*,*) 'natoms=',natoms,'timestep=', dt,'nstep=', nsteps
+!WRITE(*,*) 'otputfreq=', nfi,'mass=',mass,'eps=', epsilon
+!WRITE(*,*) 'sIGMA=',sigma,'rcut=', rcut,'box=', box
 
 END SUBROUTINE set_parameters
+
+SUBROUTINE ENDSIMULATION
+PRINT*, 'Deallocating storage in Fortran...'
+DEALLOCATE(pos,vel,frc)
+END SUBROUTINE ENDSIMULATION
 
 SUBROUTINE set_positions_velocities(id,x,y,z,vx,vy,vz) 
 INTEGER, INTENT(IN) :: id
@@ -137,12 +144,12 @@ vel(id,1) = vx
 vel(id,2) = vy
 vel(id,3) = vz
 
-WRITE(*,*) pos(id,1)
+!WRITE(*,*) pos(id,1)
 END SUBROUTINE set_positions_velocities
 
 
-SUBROUTINE tesdt
- CALL lala 
-END SUBROUTINE tesdt
+!SUBROUTINE tesdt
+! CALL lala 
+!END SUBROUTINE tesdt
 
 END MODULE LJMD

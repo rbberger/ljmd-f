@@ -13,9 +13,4 @@ MODULE mdsys
   REAL(kind=dbl), POINTER, DIMENSION (:,:,:) :: frc
 !  PRIVATE
   PUBLIC :: sgl, dbl, sln
-contains  
-  SUBROUTINE test
-   PRINT *, 'HELLO'
-  END SUBROUTINE
-  
 END MODULE mdsys
