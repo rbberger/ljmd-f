@@ -56,6 +56,9 @@ if __name__ == "__main__":
     print '\nStarting simulation ...'
     for n in range(int(p.numsteps)):	
         fi.onestep()
+        temp = fi.get_temp()
+        ekin = fi.get_ekin()
+        epot = fi.get_epot()
         if n % p.outputfreq == 0 :
             out.output(n,temp,ekin,epot,pos)
     out.close()
