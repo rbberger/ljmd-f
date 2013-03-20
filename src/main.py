@@ -9,7 +9,7 @@ from fintegration import ljmd as fi
 if __name__ == "__main__":
     p = input.Parameters()			# To load the Parameters
     p.load_from_file(input_file)  # To load initial pos and vel
-    pd = Pdata.ParticleData(particle_file, pd.natoms) 	
+    pd = Pdata.ParticleData(particle_file, p.natoms) 	
     out = output.Output(p)
     
     xyzfile = open("position.dat", "w")
