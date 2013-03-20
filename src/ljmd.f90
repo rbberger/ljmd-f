@@ -146,6 +146,31 @@ vel(id,3) = vz
 
 END SUBROUTINE set_positions_velocities
 
+SUBROUTINE get_ekin_temp_epot
+!REAL(kind=dbl) :: get_ekin
+! get_ekin = ekin
+! PRINT*,'ekin=', ekin
+CALL getekin
+CALL force
+END SUBROUTINE
+
+!FUNCTION get_epot(id)
+
+!REAL(8) :: get_epot
+! get_epot = epot
+!END FUNCTION
+
+
+
+!FUNCTION get_temp(id)
+
+!REAL(8) :: get_temp
+! get_temp = temp
+!END FUNCTION
+
+
+
+
 FUNCTION get_position(id, coord)
 INTEGER, INTENT(IN) :: id
 INTEGER, INTENT(IN) :: coord
@@ -159,6 +184,14 @@ INTEGER, INTENT(IN) :: coord
 REAL (8) :: get_velocity
     get_velocity = vel(id,coord)
 END FUNCTION
+
+
+
+
+
+
+
+
 
 !SUBROUTINE tesdt
 ! CALL lala 
