@@ -5,111 +5,49 @@
 ! optimized f95 version using cell lists
 !
  MODULE LJMD
-!PROGRAM LJMD
-!  USE io
   USE utils
   USE mdsys
   USE cell
   USE physconst 
-IMPLICIT NONE
+IMPLICIT NONE 
   
-!  INTEGER :: nprint, i, j
-!  INTEGER, EXTERNAL :: omp_get_num_threads
-!  CHARACTER(len=sln) :: restfile, trajfile, ergfile
 
-!   nthreads = 1
-  !$OMP parallel shared(nthreads)
-  !$OMP master
-  !$  nthreads = omp_get_num_threads()
-  !$  WRITE(stdout,'(A,I2,A)') 'Running OpenMP version using ',nthreads,' thread(s).'
-  !$OMP end master
-  !$OMP end parallel
-
-  !READ(stdin,*) natoms
-  !READ(stdin,*) mass
-  !READ(stdin,*) epsilon
-  !READ(stdin,*) sigma
-  !READ(stdin,*) rcut
-  !READ(stdin,*) box
-  !CALL getline(stdin,restfile)
-  !CALL getline(stdin,trajfile)
-  !CALL getline(stdin,ergfile)
-  !READ(stdin,*) nsteps
-  !READ(stdin,*) dt
-  !READ(stdin,*) nprint
-
-  ! allocate storage for simulation data.
-!  ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
-
-
-  ! read restart 
-  !OPEN(UNIT=33, FILE=restfile, FORM='FORMATTED', STATUS='OLD')
-  !DO i=1,natoms
-  !   READ(33,*) (pos(i,j),j=1,3)
-  !END DO
-  !DO i=1,natoms
-  !   READ(33,*) (vel(i,j),j=1,3)
-  !END DO
-  !CLOSE(33)
-  
 CONTAINS
 
-  SUBROUTINE initMdCell
- ! set up cell list
-    Print*,'I am in the init MdCell'
+! set up cell list
+SUBROUTINE initMdCell
     CALL mkcell
     CALL updcell
-  END SUBROUTINE initMdCell
-  
-  SUBROUTINE initForceEnergy
-  ! initialize forces and energies
-    Print*,'I am in the init Force Energy'
+END SUBROUTINE initMdCell
+
+! initialize forces and energies
+SUBROUTINE initForceEnergy
   nfi=0
   frc(:,:,:) = 0.0_dbl
   CALL force
-!  CALL getekin
-  END SUBROUTINE initForceEnergy  
+END SUBROUTINE initForceEnergy  
   
   
-  !CALL ioopen(ergfile, trajfile)
-
-  !WRITE(stdout, *) 'Starting simulation with ', natoms, ' atoms for', nsteps, ' steps'
-  !WRITE(stdout, *) '    NFI           TEMP                 EKIN                  EPOT&
-  !     &                ETOT'
-  !CALL output
-
-  
-  ! main MD loop 
-!!  DO nfi=1, nsteps
-     ! write output, if requested
- !    IF (mod(nfi,nprint) == 0) THEN
-!PHYTON         CALL output
-  !   END IF
-
 ! propagate system and recompute energies
- SUBROUTINE onestep
+SUBROUTINE onestep
      CALL updcell
      CALL velverlet
      CALL getekin
- END SUBROUTINE onestep
- ! END DO
+END SUBROUTINE onestep
 
-  ! clean up: close files, free memory
- ! WRITE(stdout,'(A)') 'Simulation Done.'
-  SUBROUTINE closeMd
+
+! clean up: close files, free memory
+SUBROUTINE closeMd
     CALL rmcell
-!    CALL ioclose
-  END SUBROUTINE closeMd
- 
+END SUBROUTINE closeMd
 
-!  DEALLOCATE(pos,vel,frc)
-!END PROGRAM LJMD
 
-SUBROUTINE set_parameters(natomsG, timesstepG, numstepsG, outputfreqG,massG, epsilonG, sigmaG, rcutG, boxG)
-INTEGER, intent(in) :: natomsG, timesstepG, numstepsG, outputfreqG
+!set initial parameters for LJ potential
+SUBROUTINE set_parameters(natomsG, timesstepG, numstepsG, outputfreqG,massG, epsilonG, sigmaG, rcutG, boxG, iflagG)
+INTEGER, intent(in) :: natomsG, timesstepG, numstepsG, outputfreqG, iflagG
 REAL, intent(in) :: massG, epsilonG, sigmaG, rcutG, boxG
 
-
+!defining global variables
 natoms = natomsG
 dt = timesstepG
 nsteps = numstepsG
@@ -120,19 +58,43 @@ sigma = sigmaG
 rcut = rcutG
 box = boxG
 nthreads = 1
-
-ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads)) ! warning nthreads
-!WRITE(*,*) 'natoms=',natoms,'timestep=', dt,'nstep=', nsteps
-!WRITE(*,*) 'otputfreq=', nfi,'mass=',mass,'eps=', epsilon
-!WRITE(*,*) 'sIGMA=',sigma,'rcut=', rcut,'box=', box
-
+iflag = iflagG
+ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
 END SUBROUTINE set_parameters
 
+
+!set initial parameters for MORSE  potential
+
+SUBROUTINE set_parameters_Morse(natomsG, timesstepG, numstepsG, outputfreqG,massG, &
+D_MorseG, Alpha_MorseG, Re_MorseG, rcutG, boxG, iflagG)
+INTEGER, intent(in) :: natomsG, timesstepG, numstepsG, outputfreqG, iflagG
+REAL, intent(in) :: massG, D_MorseG, Alpha_MorseG,Re_MorseG, rcutG, boxG
+
+!defining global variables
+natoms = natomsG
+dt = timesstepG
+nsteps = numstepsG
+nfi = outputfreqG
+mass = massG
+rcut = rcutG
+box = boxG
+nthreads = 1
+D_Morse = D_MorseG
+Alpha_Morse = Alpha_MorseG
+Re_Morse = Re_MorseG
+iflag = iflagG
+ALLOCATE(pos(natoms,3),vel(natoms,3),frc(natoms,3,nthreads))
+END SUBROUTINE set_parameters_Morse
+
+
+!clear memory
 SUBROUTINE ENDSIMULATION
 PRINT*, 'Deallocating storage in Fortran...'
 DEALLOCATE(pos,vel,frc)
 END SUBROUTINE ENDSIMULATION
 
+
+!set initial positions and velocities of each atoms
 SUBROUTINE set_positions_velocities(id,x,y,z,vx,vy,vz) 
 INTEGER, INTENT(IN) :: id
 REAL, INTENT(in) :: x, y, z, vx, vy, vz
@@ -147,20 +109,20 @@ vel(id,3) = vz
 END SUBROUTINE set_positions_velocities
 
 
-
+!get temperture
 FUNCTION get_temp()
 REAL(8) :: get_temp
 CALL getekin
 get_temp = temp
 END FUNCTION
 
-
+!get kinetic energy
 FUNCTION get_ekin()
 REAL(8) :: get_ekin
 CALL getekin
 get_ekin = ekin
 END FUNCTION
-
+!get potential energy
 FUNCTION get_epot()
 REAL(8) :: get_epot
 CALL force
@@ -168,47 +130,21 @@ get_epot = epot
 END FUNCTION
 
 
-!FUNCTION get_epot(id)
-
-!REAL(8) :: get_epot
-! get_epot = epot
-!END FUNCTION
-
-
-
-!FUNCTION get_temp(id)
-
-!REAL(8) :: get_temp
-! get_temp = temp
-!END FUNCTION
-
-
-
-
+!get positions
 FUNCTION get_position(id, coord)
 INTEGER, INTENT(IN) :: id
 INTEGER, INTENT(IN) :: coord
 REAL(8) :: get_position 
-    get_position = pos(id, coord)
+ get_position = pos(id, coord)
 END FUNCTION
 
+
+!get velocities
 FUNCTION get_velocity(id,coord)
 INTEGER, INTENT(IN) :: id
 INTEGER, INTENT(IN) :: coord
 REAL (8) :: get_velocity
-    get_velocity = vel(id,coord)
+ get_velocity = vel(id,coord)
 END FUNCTION
-
-
-
-
-
-
-
-
-
-!SUBROUTINE tesdt
-! CALL lala 
-!END SUBROUTINE tesdt
 
 END MODULE LJMD

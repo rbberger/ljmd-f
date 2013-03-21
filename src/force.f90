@@ -13,11 +13,7 @@ SUBROUTINE force
  
   epot=0.0_dbl
 
-  !$OMP parallel default(SHARED) reduction(+:epot)              &
-  !$OMP private(i,j,k,n,m,ii,jj,kk,tid,fromidx,toidx)           &
-  !$OMP private(boxby2,c12,c6,r6,ffac,rsq,rcutsq,rinv,pos1,delta)
   tid = 0
-  !$ tid = omp_get_thread_num() 
   tid = tid + 1
   frc(:,:,tid) = 0.0_dbl
 
@@ -44,14 +40,21 @@ SUBROUTINE force
       
            ! compute force and energy if within cutoff */
            IF (rsq < rcutsq) THEN
+            IF (iflag == 1 ) THEN
+! Computing LJ potential
               rinv = 1.0_dbl/rsq
               r6 = rinv*rinv*rinv
               ffac = (12.0_dbl*c12*r6 - 6.0_dbl*c6)*r6*rinv
               epot = epot + r6*(c12*r6 - c6)
-
+            ELSE
+! Computing Morse potential
+              ffac = 2 * Alpha_Morse * D_Morse * &
+              (1 - exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse))) * exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse))
+              epot = D_Morse * (1 - exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse)))
+            END IF
               frc(ii,:,tid) = frc(ii,:,tid) + delta*ffac
               frc(jj,:,tid) = frc(jj,:,tid) - delta*ffac
-           END IF
+           END IF 
         END DO
      END DO
   END DO
@@ -75,11 +78,18 @@ SUBROUTINE force
       
            ! compute force and energy if within cutoff */
            IF (rsq < rcutsq) THEN
+             ! computing the LJ potential
+            IF (iflag == 1 ) THEN             
               rinv = 1.0_dbl/rsq
               r6 = rinv*rinv*rinv
               ffac = (12.0_dbl*c12*r6 - 6.0_dbl*c6)*r6*rinv
               epot = epot + r6*(c12*r6 - c6)
-
+            ELSE
+            ! Computing Morse potential
+              ffac = 2 * Alpha_Morse * D_Morse * &
+              (1 - exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse))) * exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse))
+              epot = D_Morse * (1 - exp(-Alpha_Morse*(sqrt(rsq)-Re_Morse)))
+            END IF
               frc(ii,:,tid) = frc(ii,:,tid) + delta*ffac
               frc(jj,:,tid) = frc(jj,:,tid) - delta*ffac
            END IF
@@ -88,7 +98,6 @@ SUBROUTINE force
   END DO
   ! before reducing the forces, we have to make sure 
   ! that all threads are done adding to them.
-  !$OMP barrier
 
   IF (nthreads > 1) THEN
      ! set equal chunks of index ranges
@@ -106,5 +115,4 @@ SUBROUTINE force
         END DO
      END DO
   END IF
-  !$OMP END PARALLEL
 END SUBROUTINE force
