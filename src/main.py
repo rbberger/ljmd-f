@@ -38,7 +38,11 @@ if __name__ == "__main__":
     pd.write_out("output.rest")
 
     # Export parameters from python to fortran
-    fi.set_parameters(p.natoms, p.timestep, p.numsteps, p.outputfreq, p.mass, p.epsilon, p.sigma, p.rcut, p.box)    
+    if p.iflag == 1:
+    	fi.set_parameters(p.natoms, p.timestep, p.numsteps, p.outputfreq, p.mass, p.epsilon, p.sigma, p.rcut, p.box, p.iflag)    
+    else:
+	fi.set_parameters_morse(p.natoms, p.timestep, p.numsteps, p.outputfreq, p.mass, p.d_morse, p.alpha_morse, p.re_morse,p.rcut, p.box, p.iflag)
+
     # Export initial position and velocity from python to fortran 
     for i in range(p.natoms):
         fi.set_positions_velocities(i+1, pd.pos[i][0], pd.pos[i][1], pd.pos[i][2], pd.vel[i][0], pd.vel[i][1], pd.vel[i][2]) 

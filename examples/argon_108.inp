@@ -10,3 +10,7 @@ argon_108.dat     # energies
 10000             # nr MD steps
 5.0               # MD time step (in fs)
 100               # output print frequency
+2                 # iflag 1 - LJ potential
+1.2379            # D parameter for Morse, good one : 1.2379
+1.623             # Alpha parameter for Morse, good one : 1.623
+0.405             # Re parameter fo Morse, good one : 0.405

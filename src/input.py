@@ -10,7 +10,7 @@ class Parameters:
         self.mass = 39.948
         self.epsilon = 0.2379
         self.sigma = 3.405
-        self.rcut = 8.5
+        self.rcut = 8
         self.box = 17.1580
         self.numsteps = 10000
         self.timestep = 5
@@ -18,7 +18,10 @@ class Parameters:
         self.restartFilename = ""
         self.trajectoryFilename = ""
         self.energiesFilename = ""
-        
+        self.iflag = 1
+        self.d_morse = 2.0
+        self.alpha_morse = 3.0
+        self.re_morse = 4.0 
     def load_from_file(self, filename):
         p = Parameters()
         
@@ -68,6 +71,18 @@ class Parameters:
         # output print frequency
         line = f.readline()
         self.outputfreq = get_float_parameter(line)[0]
+        # output print iflag
+        line = f.readline()
+        self.iflag = get_float_parameter(line)[0]
+        # output print D parameters for Morse
+        line = f.readline()
+        self.d_morse = get_float_parameter(line)[0]
+        # output print Alpha parameters for Morse
+        line = f.readline()
+        self.alpha_morse = get_float_parameter(line)[0]
+        # output print Alpha parameters for Morse
+        line = f.readline()
+        self.re_morse = get_float_parameter(line)[0]
 
         f.close()
         return p
@@ -87,5 +102,9 @@ if __name__ == "__main__":
         print "restartFilename", p.restartFilename
         print "trajectoryFilename", p.trajectoryFilename
         print "energiesFilename", p.energiesFilename 
+        print "iflag", p.iflag 
+        print "D Morse", p.d_morse 
+        print "Alpha Morse", p.alpha_morse 
+        print "Re Morse", p.re_morse 
 
 
