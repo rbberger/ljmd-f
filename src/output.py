@@ -9,7 +9,7 @@ class Output:
         print "NFI\t TMP\t EKIN\t EPOT\t ETOT"
 
     def output(self, nfi, temp, ekin, epot, positions):
-        self.logfile.write("%d\t%f\t%f\t%f\t%f\n" %  (nfi, temp, ekin, epot, ekin+epot))
+        self.logfile.write("\t%8d\t%20.8f\t%20.8f\t%20.8f\t%20.8f\n" %  (nfi, temp, ekin, epot, ekin+epot))
         print "%d\t%f\t%f\t%f\t%f" % (nfi, temp, ekin, epot, ekin+epot)
         self.xyzfile.write("%d\n" % self.parameters.natoms)
         self.xyzfile.write("%s%d\t%s%f\n" % ("nfi=", nfi, "etot=", ekin+epot))
