@@ -4,29 +4,29 @@
 
 class ParticleData(object):
 	def __init__(self,filename,natoms):
-		self._natoms = natoms
-		self._filename = filename
+		self.natoms = natoms
+		self.filename = filename
 		print "Particle Positions file  %r:" % filename
 
 		f = open(filename)
-		self._position = []
-		self._vel = []
+		self.pos = []
+		self.vel = []
 		
-		for i in range(self._natoms):
+		for i in range(self.natoms):
 			str = f.readline()
 			temp = [float(x) for x in str.split()]
-			self._position.append(tuple(temp))
-		for i in range(self._natoms,2*self._natoms):
+			self.pos.append(tuple(temp))
+		for i in range(self.natoms,2*self.natoms):
 			str = f.readline()
 			temp2 = [float(x) for x in str.split()]
-			self._vel.append(tuple(temp2))
+			self.vel.append(tuple(temp2))
 		f.close()
 
 	def write_out(self,filename):
 		f = open(filename,'w')
-		for p in self._position:
+		for p in self.pos:
 			f.write("%f\t%f\t%f\n" % p)
-		for v in self._vel:
+		for v in self.vel:
 			f.write("%f\t%f\t%f\n" % v)
 		f.close()
 		
